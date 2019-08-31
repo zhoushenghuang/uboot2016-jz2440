@@ -742,6 +742,7 @@ static int run_main_loop(void)
 #ifdef CONFIG_SANDBOX
 	sandbox_main_loop_init();
 #endif
+        run_command("mtdparts default", 0);    /* 执行"mtdparts default"命令 */
 	/* main_loop() can return to retry autoboot, if so just run it again */
 	for (;;)
 		main_loop();

@@ -31,7 +31,16 @@
 #define CONFIG_CMDLINE_TAG	/* enable passing of ATAGs */
 #define CONFIG_SETUP_MEMORY_TAGS
 #define CONFIG_INITRD_TAG
-
+/*
+ * mtdparts
+ */
+#define CONFIG_CMD_MTDPARTS
+#define CONFIG_MTD_DEVICE
+#define MTDIDS_DEFAULT		"nand0=jz2440-0"  /* 哪一个设备 */
+#define MTDPARTS_DEFAULT	"mtdparts=jz2440-0:256k(u-boot),"	\
+						"128k(params),"		\
+						"2m(kernel),"	        \
+						"-(rootfs)"		\
 /*
  * Hardware drivers
  */
@@ -53,30 +62,38 @@
 /************************************************************
  * USB support (currently only works with D-cache off)
  ************************************************************/
+#if 0
 #define CONFIG_USB_OHCI
 #define CONFIG_USB_OHCI_S3C24XX
 #define CONFIG_DOS_PARTITION
-
+#endif
 /************************************************************
  * RTC
  ************************************************************/
+#if 0
 #define CONFIG_RTC_S3C24X0
+#endif
 
 #define CONFIG_BAUDRATE		115200
 
 /*
  * BOOTP options
  */
+#if 0
 #define CONFIG_BOOTP_BOOTFILESIZE
 #define CONFIG_BOOTP_BOOTPATH
 #define CONFIG_BOOTP_GATEWAY
 #define CONFIG_BOOTP_HOSTNAME
+#endif
 
 /*
  * Command line configuration.
  */
+#if 0
 #define CONFIG_CMD_BSP
 #define CONFIG_CMD_DATE
+#endif
+
 #define CONFIG_CMD_NAND
 #define CONFIG_CMD_REGINFO
 
@@ -85,10 +102,17 @@
 /* autoboot */
 #define CONFIG_BOOT_RETRY_TIME	-1
 #define CONFIG_RESET_TO_RETRY
-
+#if 0
 #define CONFIG_NETMASK		255.255.255.0
 #define CONFIG_IPADDR		10.0.0.110
 #define CONFIG_SERVERIP		10.0.0.1
+#endif
+#define CONFIG_BOOTARGS  "console=ttySAC0 root=/dev/mtdblock3"
+#define CONFIG_BOOTCOMMAND  "nand read 30000000 kernel;bootm 30000000"
+#define CONFIG_ETHADDR 	00:0c:29:f2:9f:35
+#define CONFIG_NETMASK		255.255.255.0
+#define CONFIG_IPADDR		192.168.1.17
+#define CONFIG_SERVERIP		192.168.1.12
 
 #if defined(CONFIG_CMD_KGDB)
 #define CONFIG_KGDB_BAUDRATE	115200	/* speed to run kgdb serial port */
@@ -139,10 +163,16 @@
 #define CONFIG_SYS_MAX_FLASH_BANKS	1
 #define CONFIG_SYS_FLASH_BANKS_LIST     { CONFIG_SYS_FLASH_BASE }
 #define CONFIG_SYS_MAX_FLASH_SECT	(128)
-
+#if 0
 #define CONFIG_ENV_ADDR			(CONFIG_SYS_FLASH_BASE + 0x070000)
 #define CONFIG_ENV_IS_IN_FLASH
 #define CONFIG_ENV_SIZE			0x10000
+#endif
+#define CONFIG_ENV_IS_IN_NAND    //Makeflie里面编译env_nand.c的条件宏
+#define CONFIG_ENV_OFFSET      0x00040000         //环境变量起始地址
+#define CONFIG_ENV_SIZE        0x20000            //环境变量的大小（NAND Flash需要设置为块对齐大小）
+#define CONFIG_ENV_RANGE       CONFIG_ENV_SIZE    //要擦除的环境变量的大小
+
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
 
@@ -171,12 +201,14 @@
 /*
  * File system
  */
+#if 0
 #define CONFIG_CMD_UBIFS
 #define CONFIG_CMD_MTDPARTS
 #define CONFIG_MTD_DEVICE
 #define CONFIG_MTD_PARTITIONS
 #define CONFIG_YAFFS2
 #define CONFIG_RBTREE
+#endif
 
 /* additions for new relocation code, must be added to all boards */
 #define CONFIG_SYS_SDRAM_BASE	PHYS_SDRAM_1
