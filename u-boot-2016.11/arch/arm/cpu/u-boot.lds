@@ -44,6 +44,8 @@ SECTIONS
 		*(.__image_copy_start)
 		*(.vectors)
 		CPUDIR/start.o (.text*)
+                board/samsung/jz2440/built-in.o (.text*)
+                arch/arm/lib/built-in.o (.text*)
 		*(.text*)
 	}
 

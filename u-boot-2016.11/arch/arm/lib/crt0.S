@@ -82,6 +82,25 @@ ENTRY(_main)
 #else
 	bic	sp, sp, #7	/* 8-byte alignment for ABI compliance */
 #endif
+
+	/* 初始化NAND Flash */
+	bl nand_init_ll    /* 跳转到borad/samsung/jz2440/init.c 中执行nand_init_ll函数 */
+ 
+	/* 重定位 */
+	mov r0, #0                      /* uboot源地址 */
+	ldr r1, =(CONFIG_SYS_TEXT_BASE)	/* 拷贝uboot到目的地址也就是链接地址CONFIG_SYS_TEXT_BASE上 */
+	ldr r2, =_start			/* 得到uboot的开始地址(链接地址) */
+    ldr r3, =__bss_start		/* 得到bss段开始地址(链接地址) */
+    sub r2, r3, r2		        /* 得到uboot大小 */
+	bl copy_code_to_sdram           /* 拷贝代码到SDRAM，参数1:uboot源地址，参数2:目的地址，参数3:uboot大小 */
+ 
+#if 0
+	bl clear_bss                    /* 清除bss， 和下面的清BSS可二选一 */
+#endif
+ 
+	ldr pc, =call_board_init_f      /* 跳到SDRAM中执行剩下的代码 */
+	
+call_board_init_f:
 	mov	r0, sp
 	bl	board_init_f_alloc_reserve
 	mov	sp, r0
@@ -117,8 +136,10 @@ ENTRY(_main)
 #if defined(CONFIG_CPU_V7M)
 	orr	lr, #1				/* As required by Thumb-only */
 #endif
+#if 0
 	ldr	r0, [r9, #GD_RELOCADDR]		/* r0 = gd->relocaddr */
 	b	relocate_code
+#endif
 here:
 /*
  * now relocate vectors
