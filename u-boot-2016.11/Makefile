@@ -1,6 +1,9 @@
 #
 # SPDX-License-Identifier:	GPL-2.0+
 #
+#must config CROSS_COMPILE, if not, complie will failed!!!
+ARCH            ?= arm
+CROSS_COMPILE   ?= arm-none-eabi-
 
 VERSION = 2016
 PATCHLEVEL = 11
