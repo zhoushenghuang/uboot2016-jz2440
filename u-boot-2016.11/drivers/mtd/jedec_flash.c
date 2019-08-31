@@ -164,6 +164,24 @@ struct amd_flash_info {
 #define SIZE_8MiB   23
 
 static const struct amd_flash_info jedec_table[] = {
+/*MX29LV160DB*/
+    {
+		.mfr_id         = (u16)MX_MANUFACT,        /* 厂家ID0x00C200C2 (读nor,便是0xc2) */
+		.dev_id         = 0x2249,                  /* 设备ID */
+		.name           = "MXIC MX29LV160DB",
+		.uaddr          = {
+		   [1] = MTD_UADDR_0x0555_0x02AA     /* 数组[1]表示是16位nor,解锁地址为:0x555,0x2AA */
+		},
+		.DevSize        = SIZE_2MiB,
+		.CmdSet         = P_ID_AMD_STD,
+		.NumEraseRegions= 4,         /* 4种不同的扇区规格 */
+		.regions        = {
+			ERASEINFO(16*1024, 1),	 /*描述扇区大小，扇区个数 */
+			ERASEINFO(8*1024, 2),
+			ERASEINFO(32*1024, 1),
+			ERASEINFO(64*1024, 31),
+		}
+    },
 #ifdef CONFIG_SYS_FLASH_LEGACY_256Kx8
 	{
 		.mfr_id		= (u16)SST_MANUFACT,
